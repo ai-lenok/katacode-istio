@@ -14,12 +14,12 @@
 Определим правило маршрутизации:
 `kubectl apply -f inbound-to-serviceA-vs.yml`{{execute}}
 
-Подробно тип манифестов выше рассмотрены в упражнении: [Конфигурация окружения и запуск прикладного сервиса в sevice mesh](https://sbercode.pcbltools.ru/ui/ArtashesAvetisyan/sc1/)
+Подробно тип манифестов выше рассмотрены в упражнении: [Конфигурация окружения и запуск прикладного сервиса в service mesh](https://sbercode.pcbltools.ru/ui/ArtashesAvetisyan/sc1/)
 
 Проверим готовность подов:
 `kubectl get pods --all-namespaces`{{execute}}
 
-Все поды должны иметь статус Running, дождитесь нужного статсуса.
+Все поды должны иметь статус Running, дождитесь нужного статуса.
 
 И наконец совершим GET запрос по адресу ingress-шлюза:
 `curl -v http://$GATEWAY_URL/service-a`{{execute}}

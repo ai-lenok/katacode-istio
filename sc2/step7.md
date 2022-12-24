@@ -1,6 +1,6 @@
-На данном шаге мы откроем исходящий трафик из пространсва имен dev-service-mesh для получения ответов из пространсва имен external-cluster на запросы ServiceC.
+На данном шаге мы откроем исходящий трафик из пространства имен dev-service-mesh для получения ответов из пространства имен external-cluster на запросы ServiceC.
 
-Схема service mesh, в соотвесвтии с которой будем настраивать наш кластер:
+Схема service mesh, в соответствии с которой будем настраивать наш кластер:
 
 ![Mesh configuration](../assets/sc2-4.png)
 
@@ -14,7 +14,7 @@
 
 Реализуем третий подход.
 
-Развернем egress-шлюз, выполнив команду авто-конфигруации Isto:
+Развернем egress-шлюз, выполнив команду авто-конфигурации Istio:
 
 `istioctl -c /etc/rancher/k3s/k3s.yaml install -y --set components.egressGateways[0].name=istio-egressgateway --set components.egressGateways[0].enabled=true --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.outboundTrafficPolicy.mode=REGISTRY_ONLY --set values.pilot.resources.requests.memory=128Mi --set values.pilot.resources.requests.cpu=50m --set values.global.proxy.resources.requests.cpu=10m --set values.global.proxy.resources.requests.memory=32Mi --set values.global.proxy.resources.limits.memory=64Mi --set values.pilot.resources.limits.memory=256Mi`{{execute}}
 
@@ -63,7 +63,7 @@ spec:
               number: 80
 ```
 
-В соответствии с этим манифестом новое правило будет работать при вызовах на хост istio-ingressgateway.istio-system.svc.cluster.local из шлюза istio-egressgateway, а также из любого envoy-прокси в неймспейсе. Если вызов прийдет из любого envoy-прокси в неймспейсе (кроме istio-egressgateway), произойдет его перенаправление на хост istio-egressgateway. Если поступит запрос из istio-egressgateway, то он будет направлен на хост istio-ingressgateway.istio-system.svc.cluster.local. Таким образом достигается сосредоточение всех исходящих вызовов в кластере на шлюз istio-egressgateway.
+В соответствии с этим манифестом новое правило будет работать при вызовах на хост istio-ingressgateway.istio-system.svc.cluster.local из шлюза istio-egressgateway, а также из любого envoy-прокси в неймспейсе. Если вызов придёт из любого envoy-прокси в неймспейсе (кроме istio-egressgateway), произойдет его перенаправление на хост istio-egressgateway. Если поступит запрос из istio-egressgateway, то он будет направлен на хост istio-ingressgateway.istio-system.svc.cluster.local. Таким образом достигается сосредоточение всех исходящих вызовов в кластере на шлюз istio-egressgateway.
 
 Применим это правило:
 `kubectl apply -f outbound-srv-c-to-service-ext-vs.yml`{{execute}}
@@ -82,8 +82,8 @@ spec:
 Hello from ServiceA! Calling master system API... Received response from master system (http://producer-internal-host): Hello from ServiceC! Calling master system API... Received response from master system (http://istio-ingressgateway.istio-system.svc.cluster.local/service-ext): Hello from External Cluster Service!
 ```
 
-Обратите внимание, что в части ответа из ServiceC присутвует ответ из кластера external-cluster по запросу `http://istio-ingressgateway.istio-system.svc.cluster.local/service-ext`
+Обратите внимание, что в части ответа из ServiceC присутствует ответ из кластера external-cluster по запросу `http://istio-ingressgateway.istio-system.svc.cluster.local/service-ext`
 
-Если исходящий трафик планируется направить на хост, который не зарегистриован в сети (в другой сетевой контур, например, в открытом Интернете), то в том случае следует дополнительно создать манифест ServiceEntry с описанием ного хоста.
+Если исходящий трафик планируется направить на хост, который не зарегистрирован в сети (в другой сетевой контур, например, в открытом Интернете), то в том случае следует дополнительно создать манифест ServiceEntry с описанием его хоста.
 
 Перейдем далее.

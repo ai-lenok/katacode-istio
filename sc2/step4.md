@@ -1,4 +1,4 @@
-На этом шаге мы направим исходящие запросы из ServiceA в ServiceB. На схеме это выглядет слудующим образом:
+На этом шаге мы направим исходящие запросы из ServiceA в ServiceB. На схеме это выглядит следующим образом:
 
 ![Mesh configuration](../assets/sc2-2.png)
 
@@ -10,7 +10,7 @@
 
 Определим правило маршрутизации запросов из ServiceA на хост producer-internal-host.
 
-Россмотрим producer-internal-host-vs:
+Рассмотрим producer-internal-host-vs:
 ```
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -35,7 +35,7 @@ spec:
 Проверим готовность подов:
 `kubectl get pods --all-namespaces`{{execute}}
 
-Повторим совершенный на предидущем шаге GET запрос по адресу ingress-шлюза:
+Повторим совершенный на предыдущем шаге GET запрос по адресу ingress-шлюза:
 `curl -v http://$GATEWAY_URL/service-a`{{execute}}
 
 В случае успеха ответ на совершенный вызов должен быть таким:
