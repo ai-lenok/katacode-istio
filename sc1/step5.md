@@ -23,7 +23,7 @@ spec:
 
 `kubectl apply -f producer-internal-host.yml`{{execute}}
 
-Получим его детальное описание из cubectl:
+Получим его детальное описание из kubectl:
 
 `kubectl describe service producer-internal-host`{{execute}}
 
